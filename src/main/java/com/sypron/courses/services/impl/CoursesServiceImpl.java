@@ -6,6 +6,7 @@ import com.sypron.courses.exceptions.IntegrationException;
 import com.sypron.courses.exceptions.MissingOrBadParamsException;
 import com.sypron.courses.exceptions.NotFoundException;
 import com.sypron.courses.models.dto.CourseDto;
+import com.sypron.courses.models.dto.request.CourseRequestDto;
 import com.sypron.courses.models.entities.Course;
 import com.sypron.courses.models.entities.User;
 import com.sypron.courses.services.CoursesService;
@@ -30,20 +31,20 @@ public class CoursesServiceImpl implements CoursesService {
     private static final Logger logger = LoggerFactory.getLogger(CoursesServiceImpl.class);
 
     @Override
-    public List<CourseDto> getAllCourses() {
+    public List<CourseDto> getAllCourses(Long userId) {
         logger.info("getting all courses");
         List<Course> coursesList = courseDao.findAll();
         List<CourseDto> courseDtos = new ArrayList<>();
         for (Course course : coursesList) {
-            courseDtos.add(course.mapToCourseDto());
+            courseDtos.add(course.mapToCourseDto(userId));
         }
         return courseDtos;
     }
 
     @Override
-    public CourseDto createCourse(CourseDto courseDto) {
-        logger.info("creating course [{}]" , courseDto);
-        Course course = new ModelMapper().map(courseDto , Course.class);
+    public CourseDto createCourse(CourseRequestDto courseRequestDto) {
+        logger.info("creating course [{}]" , courseRequestDto);
+        Course course = new ModelMapper().map(courseRequestDto , Course.class);
         try {
             this.courseDao.save(course);
         } catch (Exception e) {
@@ -54,14 +55,14 @@ public class CoursesServiceImpl implements CoursesService {
     }
 
     @Override
-    public CourseDto updateCourse(CourseDto courseDto, Long courseId) {
+    public CourseDto updateCourse(CourseRequestDto courseRequestDto, Long courseId) {
         logger.info("updating course [{}]" , courseId);
         Course course = getCourseById(courseId);
-        course.setTitle(courseDto.getTitle());
-        course.setDescription(courseDto.getDescription());
-        course.setPrice(courseDto.getPrice());
-        course.setPeriod(courseDto.getPeriod());
-        course.setInstructorName(courseDto.getInstructorName());
+        course.setTitle(courseRequestDto.getTitle());
+        course.setDescription(courseRequestDto.getDescription());
+        course.setPrice(courseRequestDto.getPrice());
+        course.setPeriod(courseRequestDto.getPeriod());
+        course.setInstructorName(courseRequestDto.getInstructorName());
         try {
             this.courseDao.save(course);
         } catch (Exception e) {
@@ -82,20 +83,19 @@ public class CoursesServiceImpl implements CoursesService {
     public void enrollInCourse(Long userId, Long courseId) {
         User user = getUserById(userId);
         Course course = getCourseById(courseId);
-        user.getCoursesList().add(course);
+        course.getUsersList().add(user);
         userDao.save(user);
     }
 
     @Override
     public void exitFromCourse(Long userId, Long courseId) {
-        User user = getUserById(userId);
-        for (int i = 0 ; i < user.getCoursesList().size() ; i++) {
-            if (user.getCoursesList().get(i).getId().equals(courseId)) {
-                user.getCoursesList().remove(i);
+        Course course = getCourseById(courseId);
+        for (int i = 0 ; i < course.getUsersList().size() ; i++) {
+            if (course.getUsersList().get(i).getId().equals(userId)) {
+                course.getUsersList().remove(i);
             }
-            userDao.save(user);
         }
-        userDao.save(user);
+        courseDao.save(course);
     }
 
     @Override
@@ -104,7 +104,7 @@ public class CoursesServiceImpl implements CoursesService {
         List<Course> courseList = user.getCoursesList();
         List<CourseDto> courseDtos = new ArrayList<>();
         for (Course course : courseList) {
-            courseDtos.add(course.mapToCourseDto());
+            courseDtos.add(course.mapToCourseDto(userId));
         }
         return courseDtos;
     }

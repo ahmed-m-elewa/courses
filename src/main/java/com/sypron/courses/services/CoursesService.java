@@ -1,16 +1,17 @@
 package com.sypron.courses.services;
 
 import com.sypron.courses.models.dto.CourseDto;
+import com.sypron.courses.models.dto.request.CourseRequestDto;
 
 import java.util.List;
 
 public interface CoursesService {
 
-    public List<CourseDto> getAllCourses();
+    public List<CourseDto> getAllCourses(Long userId);
 
-    public CourseDto createCourse (CourseDto courseDto);
+    public CourseDto createCourse (CourseRequestDto courseRequestDto);
 
-    public CourseDto updateCourse (CourseDto courseDto , Long courseId);
+    public CourseDto updateCourse (CourseRequestDto courseRequestDto , Long courseId);
 
     public void deleteCourse (Long courseId);
 

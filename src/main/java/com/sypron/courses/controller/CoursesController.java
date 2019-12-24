@@ -1,6 +1,7 @@
 package com.sypron.courses.controller;
 
 import com.sypron.courses.models.dto.CourseDto;
+import com.sypron.courses.models.dto.request.CourseRequestDto;
 import com.sypron.courses.services.CoursesService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -25,19 +27,20 @@ public class CoursesController {
     @GetMapping()
     public ResponseEntity<List<CourseDto>> getAllCourses() {
         logger.info("REST Controller to get all courses");
-        return new ResponseEntity<>(coursesService.getAllCourses(), HttpStatus.OK);
+        String userIdentity = SecurityContextHolder.getContext().getAuthentication().getName();
+        return new ResponseEntity<>(coursesService.getAllCourses(Long.parseLong(userIdentity)), HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<CourseDto> createCourse(@RequestBody CourseDto courseDto) {
-        logger.info("REST Controller to create course [{}]", courseDto);
-        return new ResponseEntity<>(coursesService.createCourse(courseDto), HttpStatus.OK);
+    public ResponseEntity<CourseDto> createCourse(@RequestBody CourseRequestDto courseRequestDto) {
+        logger.info("REST Controller to create course [{}]", courseRequestDto);
+        return new ResponseEntity<>(coursesService.createCourse(courseRequestDto), HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CourseDto> updateCourse(@RequestBody CourseDto courseDto , @PathVariable(name = "id") Long id) {
-        logger.info("REST Controller to update course [{}] by id [{}]", courseDto , id);
-        return new ResponseEntity<>(coursesService.updateCourse(courseDto , id), HttpStatus.OK);
+    public ResponseEntity<CourseDto> updateCourse(@RequestBody CourseRequestDto courseRequestDto , @PathVariable(name = "id") Long id) {
+        logger.info("REST Controller to update course [{}] by id [{}]", courseRequestDto , id);
+        return new ResponseEntity<>(coursesService.updateCourse(courseRequestDto , id), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
