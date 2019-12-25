@@ -132,7 +132,7 @@ public class CoursesServiceImpl implements CoursesService {
         User user = userDao.findById(userId).orElse(null);
         if (user == null) {
             logger.error("can`t find user with id [" + userId + "] ");
-            throw new NotFoundException("ER_05_002--User not found");
+            throw new NotFoundException("ER_05_003--User not found");
         }
         return user;
     }

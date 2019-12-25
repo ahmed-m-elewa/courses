@@ -6,6 +6,10 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 public class PasswordHashUtil {
 	private static int workload = 15;
 
+	public static void main(String[] args) {
+		System.out.println(generatePasswordHash("admin").getHash());
+	}
+
 	public static HashedPassword generatePasswordHash(String password)
 	{
 		String salt = BCrypt.gensalt(workload);

@@ -19,8 +19,4 @@ public class Role {
 
     @Column(name = "NAME", nullable = false)
     private String name;
-
-    @OneToMany(targetEntity = Action.class, fetch = FetchType.LAZY)
-    private List<Action> actions;
-
 }

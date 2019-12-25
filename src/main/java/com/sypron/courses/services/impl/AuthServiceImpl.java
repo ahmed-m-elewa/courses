@@ -7,7 +7,6 @@ import com.sypron.courses.exceptions.UserAlreadyExistsException;
 import com.sypron.courses.models.dto.UserCredentialsDto;
 import com.sypron.courses.models.dto.request.UserRequestDto;
 import com.sypron.courses.models.dto.response.LoginResponseDto;
-import com.sypron.courses.models.entities.Action;
 import com.sypron.courses.models.entities.Role;
 import com.sypron.courses.models.entities.User;
 import com.sypron.courses.security.model.HashedPassword;
@@ -51,13 +50,7 @@ public class AuthServiceImpl implements AuthService {
         }
         LoginResponseDto response = new LoginResponseDto();
         response.setUser(user.mapToUserDto());
-        StringBuilder actions = new StringBuilder();
-        for (int i = 0 ; i < user.getRole().getActions().size() ; i++) {
-            actions.append(user.getRole().getActions().get(i).getName());
-            actions.append(i < (user.getRole().getActions().size() - 1) ? "," : "");
-        }
-        logger.info("actions after mapping into comma separated string [{}]" , actions.toString());
-        response.setToken(tokenGenerator.getToken(actions.toString() , user.getId().toString()));
+        response.setToken(tokenGenerator.getToken(user.getRole().getName() , user.getId().toString()));
         return response;
     }
 
