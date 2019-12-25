@@ -80,7 +80,7 @@ public class AuthServiceImpl implements AuthService {
         userDao.save(user);
         LoginResponseDto response = new LoginResponseDto();
         response.setUser(user.mapToUserDto());
-        response.setToken(tokenGenerator.getToken(user.getId().toString() , user.getRole().getName()));
+        response.setToken(tokenGenerator.getToken(user.getRole().getName() , user.getId().toString()));
         return response;
 
     }
