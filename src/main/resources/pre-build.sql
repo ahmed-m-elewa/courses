@@ -42,6 +42,6 @@ CREATE TABLE `user` (
 --
 
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,'admin@sypron.com','Sypron','Admin','$2a$15$evGzxPTUWHyjwzW/MaRjGuI46shDnVjFcu4JjCbVyC/4ZO3vboGTq','admin',1);
+INSERT INTO `user` VALUES (1,'admin@sypron.com','Sypron','Admin','$2a$15$r9svU0SmDLkL9UtuO5JjJ.O5RIp9C6nXaXxtU50JpAlLN6GvgvBOa','admin',1);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;CREATE DATABASE  IF NOT EXISTS `courses` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 
